@@ -6,7 +6,7 @@ const all = async (req, res, next) => {
     responseMsg(res, true, 'All Category', cats);
 }
 const add = async (req, res, next) => {
-    
+     responseMsg(res, true, 'All Category');
 }
 
 module.exports = {
