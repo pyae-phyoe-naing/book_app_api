@@ -11,6 +11,10 @@ module.exports = {
             name: Joi.string().required(),
             author: Joi.string().required(),
             link: Joi.string().required(),
+        }),
+        BookAddCategory: Joi.object({
+            bookID: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/),
+            categoryID: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
         })
     },
     AllSchema: {

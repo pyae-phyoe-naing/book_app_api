@@ -11,11 +11,7 @@ const {
 } = require('../utils/validator');
 
 router.get('/', controller.all);
- router.post('/', [validateBody(BookSchema.Add),saveFile ,controller.add]);
-
-// router.route('/:id')
-//     .get(validateParam(AllSchema.id, 'id'), controller.get)
-//     .patch([validateParam(AllSchema.id, 'id'), validateBody(CategorySchema.Add), controller.patch])
-//     .delete(validateParam(AllSchema.id, 'id'), controller.drop);
+ router.post('/', [validateBody(BookSchema.Add), saveFile, controller.add]);
+ router.post('/add/category', [validateBody(BookSchema.BookAddCategory), controller.bookAddCategory]);
 
 module.exports = router;
