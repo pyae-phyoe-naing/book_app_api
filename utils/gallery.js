@@ -1,4 +1,5 @@
-const saveFile = async (req, res, next) => {
+const fs = require('fs');
+const saveFile = (req, res, next) => {
     if (!req.files) {
         next(new Error('Book Image is required!'));
         return;
@@ -9,7 +10,21 @@ const saveFile = async (req, res, next) => {
     req.body['image'] = fileName;
     next();
 }
+const updateFile = (req, res, next) => {
+    if (req.files) {
+        let file = req.files.file;
+        let fileName = new Date().valueOf() + Math.random(111, 999) + '_' + file.name;
+        file.mv(`./uploads/${fileName}`);
+        req.body['image'] = fileName;
+    }
+    next();
 
+}
+const deleteFile = async (filename) => {
+    await fs.unlinkSync(`./uploads/${filename}`);
+}
 module.exports = {
-    saveFile
+    saveFile,
+    updateFile,
+    deleteFile
 }
