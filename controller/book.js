@@ -15,6 +15,14 @@ const add = async (req, res, next) => {
     responseMsg(res, true, 'Book add success', book);
 
 }
+const get = async (req, res, next) => {
+    let book = await DB.findById(req.params.id).populate('categories', '-date -__v').select('-__v');
+    if (!book) {
+        next(new Error('book not found with that ID'));
+        return;
+    }
+    responseMsg(res, true, 'Get single book', book);
+}
 const patch = async (req, res, next) => {
     let book = await DB.findById(req.params.id);
     if (!book) {
@@ -28,7 +36,16 @@ const patch = async (req, res, next) => {
     let updateBook = await DB.findById(book._id);
     responseMsg(res, true, 'Update book success', updateBook);
 }
-
+const drop = async (req, res, next) => {
+    let book = await DB.findById(req.params.id);
+    if (book) {
+        deleteFile(book.image);
+        await DB.findByIdAndDelete(book._id);
+        responseMsg(res, true, 'Delete book', book);
+    } else {
+        next(new Error('Book not found with that ID'));
+    }
+}
 const bookAddCategory = async (req, res, next) => {
     let dbBook = await DB.findById(req.body.bookID);
     let dbCategory = await catDB.findById(req.body.categoryID);
@@ -72,7 +89,9 @@ const bookRemoveCategory = async (req, res, next) => {
 module.exports = {
     all,
     add,
+    get,
     patch,
+    drop,
     bookAddCategory,
     bookRemoveCategory
 }
