@@ -3,7 +3,14 @@ const Joi = require('joi');
 module.exports = {
     CategorySchema: {
         Add: Joi.object({
-            name : Joi.string().required()
+            name: Joi.string().required()
+        })
+    },
+    BookSchema: {
+        Add: Joi.object({
+            name: Joi.string().required(),
+            author: Joi.string().required(),
+            link: Joi.string().required(),
         })
     },
     AllSchema: {
