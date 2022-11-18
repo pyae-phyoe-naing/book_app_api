@@ -30,8 +30,29 @@ const bookAddCategory = async (req, res, next) => {
         next(new Error('Not Found Error , check ID'));
     }
 }
+const bookRemoveCategory = async (req, res, next) => {
+    let dbBook = await DB.findById(req.body.bookID);
+    let dbCategory = await catDB.findById(req.body.categoryID);
+    if (dbBook && dbCategory) {
+        let existCat = dbBook.categories.includes(dbCategory._id);
+        if (existCat) {
+            await DB.findByIdAndUpdate(dbBook._id, {
+                $pull: {
+                    categories: dbCategory._id
+                }
+            });
+            let bookAddCat = await DB.findById(dbBook._id).populate('categories', '-__v').select('-__v');
+            responseMsg(res, true, 'Category remove success in book', bookAddCat);
+        } else {
+            next(new Error('This category is not exists.'));
+        }
+    } else {
+        next(new Error('Not Found Error , check ID'));
+    }
+}
 module.exports = {
     all,
     add,
-    bookAddCategory
+    bookAddCategory,
+    bookRemoveCategory
 }
