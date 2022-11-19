@@ -11,10 +11,12 @@ app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const catRoute = require('./route/category');
+const authorRoute = require('./route/author');
 const bookRoute = require('./route/book');
 
 
 app.use('/categories', catRoute);
+app.use('/authors', authorRoute);
 app.use('/books', bookRoute);
 
 app.use((err, req, res, next) => {
