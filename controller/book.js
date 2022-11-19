@@ -1,5 +1,6 @@
 const DB = require('../model/book');
 const catDB = require('../model/category');
+const authorDB = require('../model/author');
 const { deleteFile } = require('../utils/gallery');
 const {
     responseMsg
@@ -86,6 +87,18 @@ const bookRemoveCategory = async (req, res, next) => {
         next(new Error('Not Found Error , check ID'));
     }
 }
+const authorByBook = async (req, res, next) => {
+    let authorId = await authorDB.find().select('-__v -date -name');
+    let checkAuthorId = authorId.filter((a) => a._id == req.params.id);
+    if (checkAuthorId.length < 1) {
+        new next(Error('Author name is not exist'));
+        return;
+    }
+    let authorBooks = await DB.find({
+        author: req.params.id
+    }).populate('categories author', '-__v -date').select('-__v');
+    responseMsg(res, true, 'Author ID by books', authorBooks);
+}
 module.exports = {
     all,
     add,
@@ -93,5 +106,6 @@ module.exports = {
     patch,
     drop,
     bookAddCategory,
-    bookRemoveCategory
+    bookRemoveCategory,
+    authorByBook
 }
