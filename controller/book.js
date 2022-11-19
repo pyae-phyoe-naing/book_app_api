@@ -6,7 +6,7 @@ const {
 } = require('../utils/helper');
 
 const all = async (req, res, next) => {
-    let books = await DB.find().populate('categories', '-__v').select('-__v');
+    let books = await DB.find().populate('categories author', '-__v -date').select('-__v');
     responseMsg(res, true, 'All Books', books);
 }
 const add = async (req, res, next) => {
@@ -16,7 +16,7 @@ const add = async (req, res, next) => {
 
 }
 const get = async (req, res, next) => {
-    let book = await DB.findById(req.params.id).populate('categories', '-date -__v').select('-__v');
+    let book = await DB.findById(req.params.id).populate('categories author', '-date -__v').select('-__v');
     if (!book) {
         next(new Error('book not found with that ID'));
         return;
@@ -57,7 +57,7 @@ const bookAddCategory = async (req, res, next) => {
                     categories: dbCategory._id
                 }
             });
-            let bookAddCat = await DB.findById(dbBook._id).populate('categories', '-__v').select('-__v');
+            let bookAddCat = await DB.findById(dbBook._id).populate('categories author', '-__v -date').select('-__v');
             responseMsg(res, true, 'Category add success in book', bookAddCat);
         } else {
             next(new Error('This category is already exists.'));
